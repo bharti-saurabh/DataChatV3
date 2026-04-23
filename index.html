@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataChat — AI-Powered Data Intelligence</title>
+  <meta name="description" content="Transform your data into insights. Choose your experience: Explorer for business teams or Analyst for data professionals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo: #6366f1;
+      --violet: #8b5cf6;
+      --cyan:   #06b6d4;
+      --pink:   #ec4899;
+      --bg:     #f4f6ff;
+      --surface: #ffffff;
+      --text-1: #0d0d1a;
+      --text-2: #4b5563;
+      --text-3: #9ca3af;
+      --border: rgba(99,102,241,0.12);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient background ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 700px; height: 700px;
+      top: -200px; left: -200px;
+      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+      animation: drift1 18s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 500px; height: 500px;
+      bottom: -150px; right: -100px;
+      background: radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 70%);
+      animation: drift2 22s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 400px; height: 400px;
+      top: 50%; left: 55%;
+      background: radial-gradient(circle, rgba(6,182,212,0.09) 0%, transparent 70%);
+      animation: drift3 26s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,40px) scale(1.08); } }
+    @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-40px,-60px); } }
+    @keyframes drift3 { from { transform: translate(-50%,-50%) scale(1); } to { transform: translate(-50%,-50%) scale(1.15); } }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px 64px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+    }
+    .logo-icon svg { width: 22px; height: 22px; fill: white; }
+    .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.08));
+      border: 1px solid rgba(99,102,241,0.18);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--indigo);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--indigo);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text-1);
+      margin-bottom: 18px;
+    }
+    h1 .gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 40%, #ec4899 75%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: var(--text-2);
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto 8px;
+    }
+    .choose-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-3);
+      margin-top: 28px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Cards grid ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 420px));
+      gap: 24px;
+      width: 100%;
+      max-width: 900px;
+      justify-content: center;
+    }
+
+    /* ── Role card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.06), 0 8px 32px rgba(99,102,241,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 48px rgba(99,102,241,0.16), 0 2px 8px rgba(99,102,241,0.1);
+    }
+    .card.explorer:hover { border-color: rgba(99,102,241,0.35); }
+    .card.analyst:hover  { border-color: rgba(6,182,212,0.35); }
+
+    /* Card icon */
+    .card-icon {
+      width: 56px; height: 56px;
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .explorer .card-icon {
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.12));
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+    .analyst .card-icon {
+      background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(99,102,241,0.10));
+      border: 1px solid rgba(6,182,212,0.2);
+    }
+    .card-icon svg { width: 26px; height: 26px; }
+    .explorer .card-icon svg { color: #6366f1; }
+    .analyst  .card-icon svg { color: #0891b2; }
+
+    /* Card header */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .card-title-group {}
+    .card-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+    .explorer .card-eyebrow { color: var(--indigo); }
+    .analyst  .card-eyebrow { color: #0891b2; }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-1);
+    }
+
+    /* Card body */
+    .card-pitch {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* Feature list */
+    .features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+    .feat-check {
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      margin-top: 0px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .explorer .feat-check {
+      background: rgba(99,102,241,0.1);
+      color: var(--indigo);
+    }
+    .analyst .feat-check {
+      background: rgba(6,182,212,0.1);
+      color: #0891b2;
+    }
+    .feat-check svg { width: 10px; height: 10px; }
+
+    /* CTA button */
+    .card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      text-decoration: none;
+      letter-spacing: -0.2px;
+    }
+    .card-btn:hover { opacity: 0.92; transform: scale(1.02); }
+    .card-btn:active { transform: scale(0.98); }
+
+    .explorer .card-btn {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    }
+    .analyst .card-btn {
+      background: linear-gradient(135deg, #0891b2, #6366f1);
+      color: white;
+      box-shadow: 0 4px 16px rgba(8,145,178,0.4);
+    }
+
+    .btn-arrow {
+      width: 18px; height: 18px;
+      transition: transform 0.2s;
+    }
+    .card-btn:hover .btn-arrow { transform: translateX(3px); }
+
+    /* ── Divider ── */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin: 4px 0;
+      flex-shrink: 0;
+    }
+    .or-divider::before,
+    .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 52px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+    footer a { color: var(--indigo); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .page { padding: 32px 16px 48px; }
+      h1 { font-size: 2.2rem; letter-spacing: -1px; }
+      .cards {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+      }
+      .or-divider { display: none; }
+    }
+
+    /* ── Entrance animation ── */
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    header { animation: slide-up 0.6s ease-out both; }
+    .card.explorer { animation: slide-up 0.6s 0.15s ease-out both; }
+    .card.analyst  { animation: slide-up 0.6s 0.28s ease-out both; }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="page">
+    <header>
+      <div class="logo-mark">
+        <div class="logo-icon">
+          <!-- Sparkles / data icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/>
+          </svg>
+        </div>
+        <span class="logo-text">DataChat</span>
+      </div>
+
+      <div class="badge">
+        <span class="badge-dot"></span>
+        AI-Powered Data Intelligence
+      </div>
+
+      <h1>
+        Turn data into<br/>
+        <span class="gradient">decisions, instantly.</span>
+      </h1>
+      <p class="subtitle">
+        Chat with your data, build dashboards, and uncover insights — powered by AI. Choose the experience built for you.
+      </p>
+      <p class="choose-label">Select your role to get started ↓</p>
+    </header>
+
+    <div class="cards">
+
+      <!-- Explorer Card -->
+      <a class="card explorer" href="https://bharti-saurabh.github.io/DatachatV2/" target="_blank" rel="noopener">
+        <div class="card-header">
+          <div class="card-icon">
+            <!-- Bar chart / business icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+              <path d="M7 16v-4M12 16V8M17 16v-6"/>
+            </svg>
+          </div>
+          <div class="card-title-group">
+            <p class="card-eyebrow">Business User</p>
+            <h2 class="card-title">Explorer</h2>
+          </div>
+        </div>
+
+        <p class="card-pitch">
+          Upload your data and instantly get an AI-generated dashboard with charts, KPIs, and plain-English insights. No SQL, no setup — just answers.
+        </p>
+
+        <ul class="features">
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            AI builds your dashboard automatically from a prompt
+          </li>
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            KPIs, charts, tables &amp; insights — all in one view
+          </li>
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            AI commentary per widget with conversational refinement
+          </li>
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            Supports CSV, Excel, JSON — no database needed
+          </li>
+        </ul>
+
+        <span class="card-btn">
+          Launch Explorer
+          <svg class="btn-arrow" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9h12M9 3l6 6-6 6"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- Analyst Card -->
+      <a class="card analyst" href="https://bharti-saurabh.github.io/DataChat/" target="_blank" rel="noopener">
+        <div class="card-header">
+          <div class="card-icon">
+            <!-- Code / terminal icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <div class="card-title-group">
+            <p class="card-eyebrow">Technical User</p>
+            <h2 class="card-title">Analyst</h2>
+          </div>
+        </div>
+
+        <p class="card-pitch">
+          Ask questions in plain English, get AI-generated SQL, explore results with charts and tables, and build polished dashboards with PDF export.
+        </p>
+
+        <ul class="features">
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            Natural-language to SQL with full query editor
+          </li>
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            Conversational chart editing — filter, sort, limit by chat
+          </li>
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            Document &amp; presentation dashboards with PDF export
+          </li>
+          <li>
+            <span class="feat-check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+            </span>
+            Python / pandas code generation from SQL results
+          </li>
+        </ul>
+
+        <span class="card-btn">
+          Launch Analyst
+          <svg class="btn-arrow" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9h12M9 3l6 6-6 6"/>
+          </svg>
+        </span>
+      </a>
+
+    </div>
+
+    <footer>
+      <p>Built with AI &mdash; powered by your own LLM endpoint &nbsp;·&nbsp; <a href="https://github.com/bharti-saurabh" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+  </div>
+</body>
+</html>
